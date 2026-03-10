@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { animate } from 'motion';
+import { filter } from 'motion/react-client';
 const Card = () => {
   const [isOpen, setIsOpen] = useState(true);
   const overlayText = {
@@ -12,14 +14,36 @@ const Card = () => {
     initial: {
       filter: 'blur(8px)',
     },
+
     hover: { filter: 'blur(0px)', boxShadow: '10px 10px 0px 0px #a8a29e' },
+  };
+  const parentAnimations = {
+    initial: {
+      opacity: 0,
+      y: 25,
+      filter: 'blur(10px)',
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      x: 0,
+      filter: 'blur(0px)',
+    },
+    transition: {
+      duration: 0.3,
+      ease: 'easeInOut',
+      delay: 0.2,
+    },
   };
   return (
     <>
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            layout
+            key={'card-container'}
+            variants={parentAnimations}
+            whileInView="animate"
+            viewport={{ amount: 0.5, margin: '0px 0px -100px 0px' }}
             initial="initial"
             whileHover="hover"
             exit={{
@@ -36,18 +60,18 @@ const Card = () => {
               transition={{
                 duration: 0.3,
               }}
-              className="w-xs h-48 bg-neutral-200 relative rounded-md flex flex-col items-center justify-center text-2xl text-neutral-800"
+              className="w-xs text-lg  h-48 bg-neutral-200 relative rounded-lg flex flex-col items-center justify-center  text-neutral-700"
             >
+              Hello from the card
               <button
                 onClick={() => setIsOpen(false)}
-                className="mb-4 shadow-md hover:scale-[1.01] transition-all duration-100 active:scale-105 px-3 py-1 rounded-md bg-neutral-400/90"
+                className="mt-4 shadow-md hover:scale-[1.01] transition-all duration-100 active:scale-105 px-3 py-1 rounded-md bg-neutral-400/90"
               >
                 close
               </button>
-              Hello from the card
             </motion.div>
             <motion.h1
-              className="absolute  flex items-center justify-center "
+              className="absolute text-neutral-800 text-sm flex items-center justify-center "
               variants={overlayText}
             >
               Hover me
@@ -57,15 +81,27 @@ const Card = () => {
 
         {!isOpen && (
           <motion.button
-            intial={{
+            key={'card-open-button'}
+            initial={{
               opacity: 0,
-              y: 50,
+              y: 150,
+              filter: 'blur(10px)',
+            }}
+            exit={{
+              y: -50,
+              opacity: [0.5, 0.6, 0.7, 0.8, 0.9, 0],
+              filter: 'blur(10px)',
             }}
             animate={{
               opacity: 1,
               y: 0,
+              filter: 'blur(0px)',
             }}
-            className="px-6 py-2 rounded-md bg-neutral-400/90 shadow-md hover:scale-[1.01] transition-all duration-100 active:scale-105"
+            transition={{
+              duration: 0.3,
+              ease: 'easeInOut',
+            }}
+            className="px-6 py-2 text-md   rounded-md bg-neutral-200 shadow-md hover:scale-[1.01] transition-all duration-100 active:scale-105"
             onClick={() => setIsOpen(true)}
           >
             Open Card
