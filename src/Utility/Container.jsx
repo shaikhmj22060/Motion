@@ -1,11 +1,13 @@
-import React from 'react'
+import { motion } from 'motion/react';
 
-const Container = ({ children ,className}) => {
+const Container = ({ children, className }) => {
   return (
-    <div className={`flex items-center  h-full w-full justify-center ${className}`}>
+    <motion.div
+      className={`flex h-screen w-full items-center justify-center ${className}`}
+    >
       {children}
-    </div>
-  )
-}
+    </motion.div>
+  );
+};
 
-export default Container
+export default Container;
