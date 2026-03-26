@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import Button from './Button';
 import Card from './Card';
 import Variants from './Variants';
+import MotionHooks from './MotionHooks';
 const App = () => {
   return (
     <motion.div
@@ -15,6 +16,7 @@ const App = () => {
 
       <Card />
       <Variants />
+      <MotionHooks />
     </motion.div>
   );
 };
