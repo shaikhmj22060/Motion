@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 prettier.config.js  
+public/Images
 dist
 dist-ssr
 .prettierrc
