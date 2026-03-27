@@ -11,7 +11,7 @@ import {
   useSpring,
   useTransform,
 } from 'motion/react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 const MotionHooks = () => {
   const features = [
@@ -40,9 +40,27 @@ const MotionHooks = () => {
       icon: <IconZoomScan size={18} />,
     },
   ];
+  // console.log(background.length);
+  const backgrounds = ['#000814', '#212529', '#1c1c1c'];
+  const [background, setBackground] = useState(backgrounds[0]);
+  const containerRef = useRef();
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+  });
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    const backgroundValues = Math.floor(latest * backgrounds.length);
+    setBackground(backgrounds[backgroundValues]);
+  });
   return (
     <>
-      <div
+      <motion.div
+        ref={containerRef}
+        // style={{
+        //   background,
+        // }}
+        animate={{
+          background,
+        }}
         className={
           'flex w-full flex-col items-center justify-center bg-neutral-900'
         }
@@ -50,7 +68,7 @@ const MotionHooks = () => {
         {features.map((feature, index) => (
           <Cards feature={feature} key={feature.title + index} />
         ))}
-      </div>
+      </motion.div>
     </>
   );
 };
@@ -63,14 +81,15 @@ const Cards = ({ feature }) => {
     target: ref,
     offset: ['start end', 'end start'],
   });
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-    console.log(latest);
-  });
+
   const translateValues = useSpring(
-    useTransform(scrollYProgress, [0, 0.5, 1], [200, 0, -600])
+    useTransform(scrollYProgress, [0, 0.5, 1], [200, 0, -600]),
+    {
+      damping: 20,
+    }
   );
   const opacityValues = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
-  // const scaleVlues = useTransform(scrollYProgress, [0, 1], [98, 100]);
+  const scaleVlues = useTransform(scrollYProgress, [0.5, 1], [1, 0.5]);
   const blur = useTransform(scrollYProgress, [0.5, 1], [0, 10]);
   return (
     <div ref={ref} className="flex h-screen items-center justify-center py-60">
@@ -93,7 +112,7 @@ const Cards = ({ feature }) => {
         style={{
           y: translateValues,
           opacity: opacityValues,
-          // scale: scaleVlues,
+          scale: scaleVlues,
         }}
         src={feature.image}
         alt="image1"
