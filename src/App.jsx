@@ -16,7 +16,6 @@ const App = () => {
 
       <Card />
       <Variants />
-      <MotionHooks />
     </motion.div>
   );
 };
